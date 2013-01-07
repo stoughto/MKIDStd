@@ -1,5 +1,7 @@
 import os
 import glob
+import matplotlib.pyplot as plt
+import numpy
 class MKIDStd:
     """
     This is a useful description of this class
@@ -23,5 +25,26 @@ class MKIDStd:
         for line in open(file):
             vals = line.strip().split(" = ");
             retval[vals[0]] = vals[1:]
-
         return retval
+
+    def load(self,name):
+        """
+        Returns a two dimensional numpy array where a[:,0] is wavelength in
+        Angstroms and a[:,1] is flux in counts/sec/angstrom/cm^2
+        """
+        fname = self.objects[name]['dataFile']
+        print fname[0]
+        a = numpy
+        a = numpy.loadtxt('data/alpha_lyr_stis_005.ascii')
+        return a
+
+    def plot(self,name):
+        a = self.load(name)
+        x = a[:,0]
+        y = a[:,1]
+        plt.loglog(x,y)
+        plt.xlabel('wavelength(Angstroms)')
+        plt.ylabel('flux(counts/sec/angstrom/cm^2)')
+        plt.savefig(name+'.png')
+
+

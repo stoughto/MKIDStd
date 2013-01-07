@@ -1,0 +1,5 @@
+dataFile = bd_17d4708_stisnic_003.ascii
+citation = ftp://ftp.stsci.edu/cdbs/current_calspec/bd_17d4708_stisnic_003.ascii
+wavelength = Angstrom
+flux = counts/sec/angstrom/cm^2?
+description = another bright star
