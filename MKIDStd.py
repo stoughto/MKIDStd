@@ -13,9 +13,9 @@ class MKIDStd:
         """
         self.junk = "This is junk"
         self.objects = {}
-        
-        for file in glob.glob("data/*.txt"):
-
+        this_dir, this_filename = os.path.split(__file__)        
+        pattern = os.path.join(this_dir,"data","*.txt")
+        for file in glob.glob(pattern):
             name,ext = os.path.splitext(os.path.basename(file))
             dictionary = self._loadDictionary(file)
             self.objects[name] = dictionary
