@@ -1,0 +1,5 @@
+dataFile = vegaData.dat
+citation = this is where we found the file
+wavlengthUnit = microns
+fluxUnit = counts/sec/angstrom/cm^2
+description = Vega is a bright star
