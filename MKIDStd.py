@@ -13,8 +13,8 @@ class MKIDStd:
         """
         self.junk = "This is junk"
         self.objects = {}
-        this_dir, this_filename = os.path.split(__file__)        
-        pattern = os.path.join(this_dir,"data","*.txt")
+        self.this_dir, this_filename = os.path.split(__file__)        
+        pattern = os.path.join(self.this_dir,"data","*.txt")
         for file in glob.glob(pattern):
             name,ext = os.path.splitext(os.path.basename(file))
             dictionary = self._loadDictionary(file)
@@ -33,9 +33,8 @@ class MKIDStd:
         Angstroms and a[:,1] is flux in counts/sec/angstrom/cm^2
         """
         fname = self.objects[name]['dataFile']
-        print fname[0]
-        a = numpy
-        a = numpy.loadtxt('data/alpha_lyr_stis_005.ascii')
+        fullFileName = os.path.join(self.this_dir,"data",fname[0])
+        a = numpy.loadtxt(fullFileName)
         return a
 
     def plot(self,name):
