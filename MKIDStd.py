@@ -37,13 +37,24 @@ class MKIDStd:
         a = numpy.loadtxt(fullFileName)
         return a
 
-    def plot(self,name):
-        a = self.load(name)
-        x = a[:,0]
-        y = a[:,1]
-        plt.loglog(x,y)
+    def plot(self,name="all"):
+        if (name == "all"):
+            for tname in self.objects.keys():
+                print "tname=", tname
+                a = self.load(tname)
+                a.shape
+                x = a[:,0]
+                y = a[:,1]
+                plt.loglog(x,y, label=tname)
+        else:
+            a = self.load(name)
+            x = a[:,0]
+            y = a[:,1]
+            plt.loglog(x,y)
+       
         plt.xlabel('wavelength(Angstroms)')
         plt.ylabel('flux(counts/sec/angstrom/cm^2)')
+        plt.legend()
         plt.savefig(name+'.png')
 
 
