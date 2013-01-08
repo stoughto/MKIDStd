@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy
 class MKIDStd:
     """
-    This is a useful description of this class
+    This is a useful description of this class.
     """
 
     def __init__(self):
