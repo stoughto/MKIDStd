@@ -1,0 +1,5 @@
+dataFile = fhr9087.dat
+citation = ftp://ftp.eso.org/pub/stecf/standards/ctiostan/
+wavlengthUnit = angstrom
+fluxUnit = counts/sec/angstrom/cm^2?
+description = B7III V 5.12
