@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import numpy
 class MKIDStd:
     """
-    This is a useful description of this class.  But it could be much more gooder.
+    This is a useful description of this class.  But it could be much better.
     """
 
     def __init__(self, referenceWavelength=5500):
@@ -54,11 +54,16 @@ class MKIDStd:
             x = a[:,0]
             y = a[:,1]
             plt.loglog(x,y, label=name)
-       
-        plt.xlabel('wavelength(Angstroms)')
+       	
+	plt.xlabel('wavelength(Angstroms)')
         plt.ylabel('flux(counts/sec/angstrom/cm^2)')
         plt.legend()
         plt.savefig(name+'.png')
-
-    def getFluxAtReferenceWavelength(self, array):
-        return 1.0;
+	
+    def getFluxAtReferenceWavelength(self, a):
+        x = a[:,0]
+        y = a[:,1]
+	for i,w in enumerate(x):
+	    if w > self.referenceWavelength:
+		break
+	return y[i]
