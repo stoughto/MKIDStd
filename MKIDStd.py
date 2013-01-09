@@ -50,7 +50,7 @@ class MKIDStd:
             a = self.load(name)
             x = a[:,0]
             y = a[:,1]
-            plt.loglog(x,y)
+            plt.loglog(x,y, label=name)
        
         plt.xlabel('wavelength(Angstroms)')
         plt.ylabel('flux(counts/sec/angstrom/cm^2)')
