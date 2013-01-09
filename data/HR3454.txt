@@ -1,0 +1,5 @@
+dataFile = fhr3454_dat.mht
+citation = ftp://ftp.eso.org/pub/stecf/standards/ctiostan/fhr3454.dat
+wavelengthUnit = angstrom?
+fluxUnit = counts/sec/angstrom/cm^2?
+description = also called eta hydrae, type b3v
