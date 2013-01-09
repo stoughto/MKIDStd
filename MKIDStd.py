@@ -7,13 +7,14 @@ class MKIDStd:
     This is a useful description of this class.  But it could be much more gooder.
     """
 
-    def __init__(self):
+    def __init__(self, referenceWavelength=5500):
         """
         Loads up the list of objects we know about
         """
-        self.junk = "This is junk"
+        self.referenceWavelength=referenceWavelength
         self.objects = {}
         self.this_dir, this_filename = os.path.split(__file__)        
+
         pattern = os.path.join(self.this_dir,"data","*.txt")
         for file in glob.glob(pattern):
             name,ext = os.path.splitext(os.path.basename(file))
@@ -35,6 +36,8 @@ class MKIDStd:
         fname = self.objects[name]['dataFile']
         fullFileName = os.path.join(self.this_dir,"data",fname[0])
         a = numpy.loadtxt(fullFileName)
+        referenceFlux = self.getFluxAtReferenceWavelength(a)
+        a[:,1] /= referenceFlux
         return a
 
     def plot(self,name="all"):
@@ -57,4 +60,5 @@ class MKIDStd:
         plt.legend()
         plt.savefig(name+'.png')
 
-
+    def getFluxAtReferenceWavelength(self, array):
+        return 1.0;
