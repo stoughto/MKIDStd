@@ -1,5 +1,6 @@
 #|wavelength|    flux     |
-|  float   |    float    |
+
+#|  float   |    float    |
  
  5500.000    9.88989E-18
   5502.553    6.02629E-18
