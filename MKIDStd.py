@@ -40,9 +40,11 @@ class MKIDStd:
         a[:,1] /= referenceFlux
         return a
 
-    def plot(self,name="all",xlog=True,ylog=True,xlim=[3000,10000]):
+    def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000]):
         if (name == "all"):
             plt.clf()
+            plotYMin = 1
+            plotYMax = 1
             for tname in self.objects.keys():
                 print "tname=", tname
                 a = self.load(tname)
@@ -57,6 +59,13 @@ class MKIDStd:
                     plt.plot(x,y, label=tname)
                 if (xlog and ylog):
                     plt.loglog(x,y, label=tname)
+                imin = numpy.searchsorted(x,xlim[0])
+                imax = numpy.searchsorted(x,xlim[1])
+                ytemp = y[imin:imax]
+                ymin = ytemp.min()
+                ymax = ytemp.max()
+                plotYMin = min(plotYMin,ymin)
+                plotYMax = max(plotYMax,ymax)
         else:
            
             a = self.load(name)
@@ -75,6 +84,7 @@ class MKIDStd:
         plt.ylabel('flux(counts/sec/angstrom/cm^2)')
         plt.legend()
         plt.xlim(xlim)
+        plt.ylim([plotYMin,plotYMax])
         plt.savefig(name+'.png')
 	
     def getFluxAtReferenceWavelength(self, a):
