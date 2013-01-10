@@ -2,6 +2,7 @@ import os
 import glob
 import matplotlib.pyplot as plt
 import numpy
+import types
 class MKIDStd:
     """
     This is a useful description of this class.  But it could be much better.
@@ -42,50 +43,46 @@ class MKIDStd:
 
     def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000]):
         if (name == "all"):
-            plt.clf()
-            plotYMin = 1
-            plotYMax = 1
-            for tname in self.objects.keys():
-                print "tname=", tname
-                a = self.load(tname)
-                a.shape
-                x = a[:,0]
-                y = a[:,1]
-                if (not xlog and ylog):
-                    plt.semilogy(x,y, label=tname)
-                if (not ylog and xlog):
-                    plt.semilogx(x,y, label=tname)
-                if (not xlog and not ylog):
-                    plt.plot(x,y, label=tname)
-                if (xlog and ylog):
-                    plt.loglog(x,y, label=tname)
-                imin = numpy.searchsorted(x,xlim[0])
-                imax = numpy.searchsorted(x,xlim[1])
-                ytemp = y[imin:imax]
-                ymin = ytemp.min()
-                ymax = ytemp.max()
-                plotYMin = min(plotYMin,ymin)
-                plotYMax = max(plotYMax,ymax)
+            listofobjects = self.objects.keys()
+            plotname = "all"
+        elif (isinstance(name, types.ListType)):
+            listofobjects = name
+            plotname = name[0]+"_group"
         else:
-           
-            a = self.load(name)
+            plotname = name
+            listofobjects = [name]
+        plt.clf()
+        plotYMin = 1
+        plotYMax = 1
+        for tname in listofobjects:
+            print "tname=", tname
+            a = self.load(tname)
+            a.shape
             x = a[:,0]
             y = a[:,1]
             if (not xlog and ylog):
-                plt.semilogy(x,y, label=name)
-            if (xlog and not ylog):
-                plt.semilogx(x,y, label=name)
+                plt.semilogy(x,y, label=tname)
+            if (not ylog and xlog):
+                plt.semilogx(x,y, label=tname)
             if (not xlog and not ylog):
-                plt.plot(x,y, label=name)
-            else:
-                plt.loglog(x,y, label=name)
+                plt.plot(x,y, label=tname)
+            if (xlog and ylog):
+                plt.loglog(x,y, label=tname)
+            imin = numpy.searchsorted(x,xlim[0])
+            imax = numpy.searchsorted(x,xlim[1])
+            ytemp = y[imin:imax]
+            ymin = ytemp.min()
+            ymax = ytemp.max()
+            plotYMin = min(plotYMin,ymin)
+            plotYMax = max(plotYMax,ymax)
        
         plt.xlabel('wavelength(Angstroms)')
         plt.ylabel('flux(counts/sec/angstrom/cm^2)')
         plt.legend()
         plt.xlim(xlim)
         plt.ylim([plotYMin,plotYMax])
-        plt.savefig(name+'.png')
+        print "plotname=", plotname
+        plt.savefig(plotname+'.png')
 	
     def getFluxAtReferenceWavelength(self, a):
         x = a[:,0]
