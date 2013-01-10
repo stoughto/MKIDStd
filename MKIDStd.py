@@ -63,7 +63,5 @@ class MKIDStd:
     def getFluxAtReferenceWavelength(self, a):
         x = a[:,0]
         y = a[:,1]
-	for i,w in enumerate(x):
-	    if w > self.referenceWavelength:
-		break
-	return y[i]
+	index = numpy.searchsorted(x, self.referenceWavelength);
+	return y[index]
