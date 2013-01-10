@@ -1,5 +1,0 @@
-dataFile = HD_84937.ascii
-citation = http://www.eso.org/sci/php/tools/uvespop/tmp/hd84937_3060_10000_8988.txt
-wavlengthUnit = angstrom
-fluxUnit = counts/sec/angstrom/cm^2?
-description = V=8.28 sdF5 star

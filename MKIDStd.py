@@ -40,24 +40,41 @@ class MKIDStd:
         a[:,1] /= referenceFlux
         return a
 
-    def plot(self,name="all"):
+    def plot(self,name="all",xlog=True,ylog=True,xlim=[3000,10000]):
         if (name == "all"):
+            plt.clf()
             for tname in self.objects.keys():
                 print "tname=", tname
                 a = self.load(tname)
                 a.shape
                 x = a[:,0]
                 y = a[:,1]
-                plt.loglog(x,y, label=tname)
+                if (not xlog and ylog):
+                    plt.semilogy(x,y, label=tname)
+                if (not ylog and xlog):
+                    plt.semilogx(x,y, label=tname)
+                if (not xlog and not ylog):
+                    plt.plot(x,y, label=tname)
+                if (xlog and ylog):
+                    plt.loglog(x,y, label=tname)
         else:
+           
             a = self.load(name)
             x = a[:,0]
             y = a[:,1]
-            plt.loglog(x,y, label=name)
-       	
-	plt.xlabel('wavelength(Angstroms)')
+            if (not xlog and ylog):
+                plt.semilogy(x,y, label=name)
+            if (xlog and not ylog):
+                plt.semilogx(x,y, label=name)
+            if (not xlog and not ylog):
+                plt.plot(x,y, label=name)
+            else:
+                plt.loglog(x,y, label=name)
+       
+        plt.xlabel('wavelength(Angstroms)')
         plt.ylabel('flux(counts/sec/angstrom/cm^2)')
         plt.legend()
+        plt.xlim(xlim)
         plt.savefig(name+'.png')
 	
     def getFluxAtReferenceWavelength(self, a):
