@@ -89,3 +89,9 @@ class MKIDStd:
         y = a[:,1]
 	index = numpy.searchsorted(x, self.referenceWavelength);
 	return y[index]
+
+    def ShowUnits(self):
+
+        for name in self.objects.keys():
+            fluxUnit = self.objects[name]['fluxUnit']
+            print name, " ", fluxUnit
