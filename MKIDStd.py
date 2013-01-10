@@ -3,6 +3,7 @@ import glob
 import matplotlib.pyplot as plt
 import numpy
 import types
+import string
 class MKIDStd:
     """
     This is a useful description of this class.  But it could be much better.
@@ -38,6 +39,14 @@ class MKIDStd:
         fullFileName = os.path.join(self.this_dir,"data",fname[0])
         a = numpy.loadtxt(fullFileName)
         referenceFlux = self.getFluxAtReferenceWavelength(a)
+        ergs = string.count(self.objects[name]['fluxUnit'],"ergs")
+        if ergs:
+            a[:,1]/= a[:,0]
+            print "converting from ergs"
+        mag = string.count(self.objects[name]['fluxUnit'],"mag")
+        if mag:
+            a[:,1] = 10**(-.04*a[:,1])
+            print "converting from mag"
         a[:,1] /= referenceFlux
         return a
 
