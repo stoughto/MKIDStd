@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy
 import types
 import string
+import pyfits
 class MKIDStd:
     """
     This is a useful description of this class.  But it could be much better.
@@ -104,3 +105,15 @@ class MKIDStd:
         for name in self.objects.keys():
             fluxUnit = self.objects[name]['fluxUnit']
             print name, " ", fluxUnit
+
+    def loadSdssSpecFits(self, fullFileName):
+        f = pyfits.open(fullFileName)
+        coeff0 = f[0].header['COEFF0']
+        coeff1 = f[0].header['COEFF1']
+        n = len(f[1].data)
+        retval = numpy.zeros([n,2])
+        retval[:,0] = numpy.arange(n)
+        retval[:,0] = 10**(coeff0+coeff1*retval[:,0])
+        for i in range(n):
+            retval[i][1] = f[1].data[i][0]
+        return retval
