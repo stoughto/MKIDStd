@@ -10,7 +10,7 @@ class MKIDStd:
     This is a useful description of this class.  But it could be much better.
     """
 
-    def __init__(self, referenceWavelength=5500):
+    def __init__(self, referenceWavelength=6500):
         """
         Loads up the list of objects we know about
         """
@@ -23,6 +23,8 @@ class MKIDStd:
             name,ext = os.path.splitext(os.path.basename(file))
             dictionary = self._loadDictionary(file)
             self.objects[name] = dictionary
+        self.balmerwavelengths = [6563,4861,4341,4102,3970,3889,3835,3646]
+        self.lymanwavelengths = [1216,1026,973,950,938,931,926,923,921,919]
 
     def _loadDictionary(self,file):
         retval = {}
@@ -85,10 +87,16 @@ class MKIDStd:
             ymax = ytemp.max()
             plotYMin = min(plotYMin,ymin)
             plotYMax = max(plotYMax,ymax)
+        
+        for x in self.balmerwavelengths:
+            plt.plot([x,x],[plotYMin,plotYMax], 'r--')
        
         plt.xlabel('wavelength(Angstroms)')
-        plt.ylabel('flux(counts/sec/angstrom/cm^2)')
-        plt.legend()
+        plt.ylabel('flux(counts)['+str(self.referenceWavelength)+']')
+        ax = plt.subplot(111)
+        box = ax.get_position()
+        ax.set_position([box.x0, box.y0, box.width * 0.6, box.height])
+        ax.legend(bbox_to_anchor=(1.05,1), loc=2, borderaxespad=0.)
         plt.xlim(xlim)
         plt.ylim([plotYMin,plotYMax])
         print "plotname=", plotname
