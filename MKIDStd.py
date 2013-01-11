@@ -9,7 +9,7 @@ class MKIDStd:
     This is a useful description of this class.  But it could be much better.
     """
 
-    def __init__(self, referenceWavelength=5500):
+    def __init__(self, referenceWavelength=6500):
         """
         Loads up the list of objects we know about
         """
@@ -92,7 +92,10 @@ class MKIDStd:
        
         plt.xlabel('wavelength(Angstroms)')
         plt.ylabel('flux(counts)['+str(self.referenceWavelength)+']')
-        plt.legend()
+        ax = plt.subplot(111)
+        box = ax.get_position()
+        ax.set_position([box.x0, box.y0, box.width * 0.6, box.height])
+        ax.legend(bbox_to_anchor=(1.05,1), loc=2, borderaxespad=0.)
         plt.xlim(xlim)
         plt.ylim([plotYMin,plotYMax])
         print "plotname=", plotname
