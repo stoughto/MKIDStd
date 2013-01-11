@@ -40,7 +40,10 @@ class MKIDStd:
         """
         fname = self.objects[name]['dataFile']
         fullFileName = os.path.join(self.this_dir,"data",fname[0])
-        a = numpy.loadtxt(fullFileName)
+        if (string.count(fullFileName,"fit")):
+            a = self.loadSdssSpecFits(fullFileName)
+        else:
+            a = numpy.loadtxt(fullFileName)
         referenceFlux = self.getFluxAtReferenceWavelength(a)
         ergs = string.count(self.objects[name]['fluxUnit'],"ergs")
         if ergs:

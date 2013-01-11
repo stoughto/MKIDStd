@@ -1,0 +1,5 @@
+dataFile = spec-2694-54199-0528.fits
+citation = SDSS
+wavlengthUnit = angstrom
+fluxUnit = ergs/sec/angstrom/cm^2
+description = white dwarf binary system period of 6 minutes
