@@ -38,7 +38,8 @@ class MKIDStd:
 
     def load(self,name):
         """
-        Returns a two dimensional numpy array where a[:,0] is wavelength in
+        Returns a two dimensional numpy array where a[:,0] is
+        wavelength in
         Angstroms and a[:,1] is flux in counts/sec/angstrom/cm^2
         
         Plots containing a lot of noise are smoothed.
@@ -50,8 +51,8 @@ class MKIDStd:
         else:
             a = numpy.loadtxt(fullFileName)
 
-        if string.count(name,"zcosmos") or string.count(name,"sdss"):
-            len = 31
+        len = int(self.objects[name]['window_len'][0])
+        if len > 1:
             a[:,1] = smooth.smooth(a[:,1], window_len=len)[len/2:-(len/2)]
             
         ergs = string.count(self.objects[name]['fluxUnit'][0],"ergs")
@@ -118,8 +119,8 @@ class MKIDStd:
         plt.ylabel('flux(counts)['+str(self.referenceWavelength)+']')
         ax = plt.subplot(111)
         box = ax.get_position()
-        ax.set_position([box.x0, box.y0, box.width * 0.6, box.height])
-        ax.legend(bbox_to_anchor=(1.05,1), loc=2, borderaxespad=0.)
+        ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
+        ax.legend(bbox_to_anchor=(1.05,1), loc=2, prop={'size':10}, borderaxespad=0.)
         plt.xlim(xlim)
         plt.ylim([plotYMin,plotYMax])
         print "plotname=", plotname
