@@ -8,7 +8,9 @@ import pyfits
 import smooth
 class MKIDStd:
     """
-    This is a useful description of this class.  But it could be much better.
+    This class contains the spectra of several standard stars. These
+    spectra may be plotted and used to compare with data from the MKID
+    detector.
     """
 
     def __init__(self, referenceWavelength=6500):
@@ -50,19 +52,27 @@ class MKIDStd:
             len = 31
             a[:,1] = smooth.smooth(a[:,1], window_len=len)[len/2:-(len/2)]
             
-        referenceFlux = self.getFluxAtReferenceWavelength(a)
-        ergs = string.count(self.objects[name]['fluxUnit'],"ergs")
+        ergs = string.count(self.objects[name]['fluxUnit'][0],"ergs")
         if ergs:
             a[:,1]/= a[:,0]
-            print "converting from ergs"
-        mag = string.count(self.objects[name]['fluxUnit'],"mag")
+        mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
         if mag:
-            a[:,1] = 10**(-.04*a[:,1])
-            print "converting from mag"
+            a[:,1] = 10**(-.04*a[:,1])/ a[:,0]
+        referenceFlux = self.getFluxAtReferenceWavelength(a)
         a[:,1] /= referenceFlux
         return a
 
     def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000]):
+        """
+        Returns a graph that plots the arrays a[:,0] (wavelength) and
+        a[:,1] (flux) with balmer wavelengths indicated. Individual
+        spectra are labeled and indicated by a legend.
+        plot() plots the spectrum of all standard stars in the program.
+        plot(['vega'],['bd17']) returns only the spectrum for those two
+        stars.
+        plot('vega') returns the spectrum for only that star.
+        Plots are saved as plotname.png
+        """
         if (name == "all"):
             listofobjects = self.objects.keys()
             plotname = "all"
@@ -115,6 +125,11 @@ class MKIDStd:
         x = a[:,0]
         y = a[:,1]
 	index = numpy.searchsorted(x, self.referenceWavelength);
+        if index < 0:
+            index = 0
+        if index > x.size - 1:
+            index = x.size - 1
+            print "index=", index
 	return y[index]
 
     def ShowUnits(self):
