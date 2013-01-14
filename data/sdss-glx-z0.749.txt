@@ -1,0 +1,5 @@
+dataFile = spSpecText-53387-2041-006.csv
+citation = SDSS
+wavlengthUnit = angstrom
+fluxUnit = ergs/sec/angstrom/cm^2
+description =
