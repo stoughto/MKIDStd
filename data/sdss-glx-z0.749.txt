@@ -3,3 +3,4 @@ citation = SDSS
 wavlengthUnit = angstrom
 fluxUnit = ergs/sec/angstrom/cm^2
 description =
+window_len = 31

@@ -3,3 +3,4 @@ citation = http://www.caha.es/pedraz/SSS/Oke/oke.html
 wavlengthUnit = angstrom
 fluxUnit = ergs/cm2/s/A*10**-16
 description =  V=14.891
+window_len = 1

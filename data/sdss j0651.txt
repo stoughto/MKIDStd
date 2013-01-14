@@ -3,3 +3,4 @@ citation = SDSS
 wavlengthUnit = angstrom
 fluxUnit = ergs/sec/angstrom/cm^2
 description = white dwarf binary system period of 6 minutes
+window_len = 31

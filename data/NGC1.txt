@@ -3,3 +3,4 @@ citation = http://tdc-www.harvard.edu/cgi-bin/arc/zpgraph?rfn=16712
 wavlengthUnit = angstrom
 fluxUnit = counts/sec/angstrom/cm^2
 description =
+window_len = 31

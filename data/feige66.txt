@@ -3,3 +3,4 @@ citation = ftp://ftp.stsci.edu/cdbs/current_calspec/feige66_002.ascii
 wavlengthUnit = angstrom
 fluxUnit = counts/sec/angstrom/cm^2?
 description = a star
+window_len = 1

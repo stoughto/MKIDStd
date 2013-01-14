@@ -3,3 +3,4 @@ citation = http://irsa.ipac.caltech.edu/data/COSMOS/spectra/z-cosmos/TBL/sc_0008
 wavlengthUnit = angstrom
 fluxUnit = ergs/sec/angstrom/cm^2
 description =
+window_len = 31
