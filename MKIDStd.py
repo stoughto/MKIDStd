@@ -11,11 +11,15 @@ class MKIDStd:
     This class contains the spectra of several standard stars. These
     spectra may be plotted and used to compare with data from the MKID
     detector.
+
+    Wavelength and flux values  and text files describing each object are saved in
+    data.
     """
 
     def __init__(self, referenceWavelength=6500):
         """
         Loads up the list of objects we know about
+        The reference wavelength is set at 6500 if _init_()
         """
         self.referenceWavelength=referenceWavelength
         self.objects = {}
@@ -75,7 +79,9 @@ class MKIDStd:
         stars.
         plot('vega') returns the spectrum for only that star.
         The y array for each plot is presented as a logarithm, while the 
-        x array is linear if plot().
+        x array is linear if plot()
+        x limits are set between 3,000 and 10,000 and y limits are calculated based
+        on those values.
         Plots are saved as plotname.png
         """
         if (name == "all"):
