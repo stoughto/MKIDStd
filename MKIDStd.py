@@ -40,6 +40,8 @@ class MKIDStd:
         """
         Returns a two dimensional numpy array where a[:,0] is wavelength in
         Angstroms and a[:,1] is flux in counts/sec/angstrom/cm^2
+        
+        Plots containing a lot of noise are smoothed.
         """
         fname = self.objects[name]['dataFile']
         fullFileName = os.path.join(self.this_dir,"data",fname[0])
@@ -71,6 +73,8 @@ class MKIDStd:
         plot(['vega'],['bd17']) returns only the spectrum for those two
         stars.
         plot('vega') returns the spectrum for only that star.
+        The y array for each plot is presented as a logarithm, while the 
+        x array is linear if plot().
         Plots are saved as plotname.png
         """
         if (name == "all"):
@@ -122,6 +126,10 @@ class MKIDStd:
         plt.savefig(plotname+'.png')
 	
     def getFluxAtReferenceWavelength(self, a):
+        """
+        returns the flux value corresponding with the reference
+        wavelength (6500).
+        """
         x = a[:,0]
         y = a[:,1]
 	index = numpy.searchsorted(x, self.referenceWavelength);
@@ -133,12 +141,18 @@ class MKIDStd:
 	return y[index]
 
     def ShowUnits(self):
+        """
+        Returns flux units for the spectra of objects.
+        """
 
         for name in self.objects.keys():
             fluxUnit = self.objects[name]['fluxUnit']
             print name, " ", fluxUnit
 
     def loadSdssSpecFits(self, fullFileName):
+        """
+        Allows spectral data from  a fits file to be read into the program
+        """
         f = pyfits.open(fullFileName)
         coeff0 = f[0].header['COEFF0']
         coeff1 = f[0].header['COEFF1']
