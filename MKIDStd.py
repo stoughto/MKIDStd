@@ -5,6 +5,7 @@ import numpy
 import types
 import string
 import pyfits
+import smooth
 class MKIDStd:
     """
     This is a useful description of this class.  But it could be much better.
@@ -44,6 +45,11 @@ class MKIDStd:
             a = self.loadSdssSpecFits(fullFileName)
         else:
             a = numpy.loadtxt(fullFileName)
+
+        if string.count(name,"zcosmos") or string.count(name,"sdss"):
+            len = 31
+            a[:,1] = smooth.smooth(a[:,1], window_len=len)[len/2:-(len/2)]
+            
         referenceFlux = self.getFluxAtReferenceWavelength(a)
         ergs = string.count(self.objects[name]['fluxUnit'],"ergs")
         if ergs:
@@ -86,7 +92,7 @@ class MKIDStd:
             imin = numpy.searchsorted(x,xlim[0])
             imax = numpy.searchsorted(x,xlim[1])
             ytemp = y[imin:imax]
-            ymin = ytemp.min()
+            ymin = abs(ytemp).min()
             ymax = ytemp.max()
             plotYMin = min(plotYMin,ymin)
             plotYMax = max(plotYMax,ymax)
