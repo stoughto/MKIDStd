@@ -170,3 +170,17 @@ class MKIDStd:
         for i in range(n):
             retval[i][1] = f[1].data[i][0]
         return retval
+
+    def report(self):
+	for name in self.objects.keys():
+	    print "name =", name
+	    fluxUnit = self.objects[name]['fluxUnit']
+	    wavlengthUnit = self.objects[name]['wavlengthUnit']
+	    citation = self.objects[name]['citation']
+	    description = self.objects[name]['description']
+	    print name, " ", fluxUnit 
+	    print " ", wavlengthUnit
+	    print " ", citation
+	    print " ", description
+
+

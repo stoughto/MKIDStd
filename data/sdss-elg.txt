@@ -2,5 +2,5 @@ dataFile = spSpecText-52999-1468-435.csv
 citation = SDSS
 wavlengthUnit = angstrom
 fluxUnit = ergs/sec/angstrom/cm^2
-description =
+description = a stellar object
 window_len = 31
