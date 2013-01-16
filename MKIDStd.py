@@ -6,7 +6,12 @@ import types
 import string
 import pyfits
 import smooth
+
+import sys
+
 from scipy.constants import *
+
+
 class MKIDStd:
     """
     This class contains the spectra of several standard stars. These
@@ -67,8 +72,14 @@ class MKIDStd:
             a[:,1] = smooth.smooth(a[:,1], window_len=len)[len/2:-(len/2)]
             
         ergs = string.count(self.objects[name]['fluxUnit'][0],"ergs")
+
         if ergs:
+<<<<<<< HEAD
             a[:,1] *= (a[:,0] * 5.03*10**7)
+=======
+            
+	    a[:,1]/= a[:,0]/hc
+>>>>>>> d5d1c33f59d766b84ee5268eb2981ac11354bf03
         mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
         if mag:
             a[:,1] = (10**(-2.406/2.5))*(10**(-0.4*a[:,1]))/(a[:,0]**2) * (a[:,0] * 5.03*10**7)
@@ -76,6 +87,7 @@ class MKIDStd:
     def normalizeFlux(self,a):
         referenceFlux = self.getFluxAtReferenceWavelength(a)
         a[:,1] /= referenceFlux
+
         return a
 
     def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000]):
@@ -181,7 +193,10 @@ class MKIDStd:
             retval[i][1] = f[1].data[i][0]
         return retval
 
-    def report(self, xlim=[900,3000000]):
+    def report(self, xlim=[500,10000000]):
+	old_stdout = sys.stdout
+	log_file = open("Report.log","w")
+	sys.stdout = log_file
 	for name in self.objects.keys():
 	    fluxUnit = self.objects[name]['fluxUnit'][0]
 	    wavelengthUnit = self.objects[name]['wavlengthUnit'][0]
@@ -199,9 +214,12 @@ class MKIDStd:
             xmax = xtemp.max()
 	    WavelengthMin = xmin
 	    WavelengthMax = xmax
-	    print "--------------------------------------------------------------------------"
+	    print "---------------------------------------------------------------------------------------"
 	    print "Name: %s" %name
 	    print "Units: Flux: %s Wavelength: %s " %(fluxUnit, wavelengthUnit) 
 	    print "Citation: %s" %citation
 	    print "Description: %s." %description
 	    print "Number of Points: %d Wavelength: Max =%9.3f Min = %10.3f" %(points, WavelengthMin, WavelengthMax)
+	    
+	sys.stdout = old_stdout
+	log_file.close()
