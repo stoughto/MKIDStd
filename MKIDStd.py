@@ -6,6 +6,7 @@ import types
 import string
 import pyfits
 import smooth
+import sys
 class MKIDStd:
     """
     This class contains the spectra of several standard stars. These
@@ -168,6 +169,9 @@ class MKIDStd:
         return retval
 
     def report(self, xlim=[900,3000000]):
+	old_stdout = sys.stdout
+	log_file = open("Report.log","w")
+	sys.stdout = log_file
 	for name in self.objects.keys():
 	    fluxUnit = self.objects[name]['fluxUnit'][0]
 	    wavelengthUnit = self.objects[name]['wavlengthUnit'][0]
@@ -191,3 +195,6 @@ class MKIDStd:
 	    print "Citation: %s" %citation
 	    print "Description: %s." %description
 	    print "Number of Points: %d Wavelength: Max =%9.3f Min = %10.3f" %(points, WavelengthMin, WavelengthMax)
+	    
+	sys.stdout = old_stdout
+	log_file.close()
