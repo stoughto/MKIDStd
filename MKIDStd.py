@@ -102,7 +102,7 @@ class MKIDStd:
 
         return a
 
-    def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000]):
+    def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000],normalizeFlux=True):
         """
         Returns a graph that plots the arrays a[:,0] (wavelength) and
         a[:,1] (flux) with balmer wavelengths indicated. Individual
