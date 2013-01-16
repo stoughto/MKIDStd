@@ -190,7 +190,7 @@ class MKIDStd:
             retval[i][1] = f[1].data[i][0]
         return retval
 
-    def report(self, xlim=[900,3000000]):
+    def report(self, xlim=[500,10000000]):
 	old_stdout = sys.stdout
 	log_file = open("Report.log","w")
 	sys.stdout = log_file
@@ -211,7 +211,7 @@ class MKIDStd:
             xmax = xtemp.max()
 	    WavelengthMin = xmin
 	    WavelengthMax = xmax
-	    print "--------------------------------------------------------------------------"
+	    print "---------------------------------------------------------------------------------------"
 	    print "Name: %s" %name
 	    print "Units: Flux: %s Wavelength: %s " %(fluxUnit, wavelengthUnit) 
 	    print "Citation: %s" %citation
