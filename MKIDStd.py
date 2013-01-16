@@ -30,6 +30,7 @@ class MKIDStd:
         self.referenceWavelength=referenceWavelength
         self.objects = {}
         self.filters = {}
+        self.filterList = ['U','B','V','R','I']
         self.this_dir, this_filename = os.path.split(__file__)        
 
         pattern = os.path.join(self.this_dir,"data","*.txt")
@@ -39,11 +40,31 @@ class MKIDStd:
             self.objects[name] = dictionary
         self.balmerwavelengths = [6563,4861,4341,4102,3970,3889,3835,3646]
         self.lymanwavelengths = [1216,1026,973,950,938,931,926,923,921,919]
-        self.filters['U'] = numpy.zeros((2,24))
-        self.filters['B'] = numpy.zeros((2,40))
-        self.filters['V'] = numpy.zeros((2,56))
-        self.filters['R'] = numpy.zeros((2,87))
-        self.filters['I'] = numpy.zeros((2,102))
+
+        self._loadFilterFile()
+
+    def _loadFilterFile(self):
+        filterFileName = os.path.join(self.this_dir,"data","ph08_UBVRI.mht")
+        f = open(filterFileName,'r')
+        nFilter = -1
+        nToRead = -1
+        iFilter = -1
+        iRead = 0
+        for line in f:
+            if (nFilter == -1) :
+                nFilter = int(line)
+            elif (nToRead <= 0):
+                nToRead = int(line)
+                iFilter += 1
+                filter = self.filterList[iFilter]
+                self.filters[filter] = numpy.zeros((2,nToRead))
+                iRead = 0
+            else:
+                nToRead -= 1
+                vals = line.split()
+                self.filters[filter][0,iRead] = vals[0]
+                self.filters[filter][1,iRead] = vals[1]
+                iRead += 1
 
     def _loadDictionary(self,file):
         retval = {}
