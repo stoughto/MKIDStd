@@ -1,8 +1,9 @@
 import unittest
 import MKIDStd
 import matplotlib.pyplot as plt
-import string
 import numpy
+import math
+from scipy.constants import *
 class TestUnitConversion(unittest.TestCase):
 
     def testPlot(self):
@@ -10,25 +11,26 @@ class TestUnitConversion(unittest.TestCase):
         #aFinal = std.load('hiltner600')
         aOriginal = numpy.loadtxt('../data/mhilt600.dat')
         plt.clf()
-        plt.plot(aOriginal[:,0],aOriginal[:,1])
-        plt.show()
-
-    def testMagToErgs(self):
-        std = MKIDStd.MKIDStd()
-        aOriginal = numpy.loadtxt('../data/mhilt600.dat')
-        # insert conversion
+        plt.subplot(211)
+        plt.plot(aOriginal[:,0],aOriginal[:,1], label='ABmag')
+        plt.gca().invert_yaxis()
+        plt.legend()
+        f = (10**(-2.406/2.5))*(10**(-0.4*aOriginal[:,1]))/(aOriginal[:,0]**2)  
         plt.subplot(212)
-        plt.plot()
+        plt.plot(aOriginal[:,0],f, label='ergs')
+        plt.legend()
         plt.show()
-
-#    def testMagtoCounts(self):
+      
+    def testMagtoCounts(self):
         std = MKIDStd.MKIDStd()
         aOriginal = numpy.loadtxt('../data/mhilt600.dat')
-        # insert conversion
-        plt.clf()
-        plt.plot()
+        f = (10**(-2.406/2.5))*(10**(-0.4*aOriginal[:,1]))/(aOriginal[:,0]**2)
+        fcounts = f * aOriginal[:,0] * 5.03*10**7
+        plt.figure(2)
+        plt.plot(aOriginal[:,0],fcounts, label='counts')
+        plt.legend()
         plt.show()
         
 
 if __name__ == '__main__':
-unittest.main()
+    unittest.main()
