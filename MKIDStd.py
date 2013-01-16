@@ -6,7 +6,12 @@ import types
 import string
 import pyfits
 import smooth
+
 import sys
+
+from scipy.constants import *
+
+
 class MKIDStd:
     """
     This class contains the spectra of several standard stars. These
@@ -24,6 +29,7 @@ class MKIDStd:
         """
         self.referenceWavelength=referenceWavelength
         self.objects = {}
+        self.filters = {}
         self.this_dir, this_filename = os.path.split(__file__)        
 
         pattern = os.path.join(self.this_dir,"data","*.txt")
@@ -33,6 +39,11 @@ class MKIDStd:
             self.objects[name] = dictionary
         self.balmerwavelengths = [6563,4861,4341,4102,3970,3889,3835,3646]
         self.lymanwavelengths = [1216,1026,973,950,938,931,926,923,921,919]
+        self.filters['U'] = numpy.zeros((2,24))
+        self.filters['B'] = numpy.zeros((2,40))
+        self.filters['V'] = numpy.zeros((2,56))
+        self.filters['R'] = numpy.zeros((2,87))
+        self.filters['I'] = numpy.zeros((2,102))
 
     def _loadDictionary(self,file):
         retval = {}
@@ -61,9 +72,20 @@ class MKIDStd:
             a[:,1] = smooth.smooth(a[:,1], window_len=len)[len/2:-(len/2)]
             
         ergs = string.count(self.objects[name]['fluxUnit'][0],"ergs")
+
         if ergs:
-	    referenceFlux = self.getFluxAtReferenceWavelength(a)
-            a[:,1] /= referenceFlux
+            
+	    a[:,1]/= a[:,0]/hc
+        mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
+        if mag:
+            a[:,1] = 10**(-.04*a[:,1])/ a[:,0]
+            a[:,1] /= a[:,0]
+        mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
+        if mag:
+            a[:,1] = 10**(-.04*a[:,1]) / a[:,0]
+        referenceFlux = self.getFluxAtReferenceWavelength(a)
+        a[:,1] /= referenceFlux
+
         return a
 
     def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000]):
