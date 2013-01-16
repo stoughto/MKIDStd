@@ -132,7 +132,8 @@ class MKIDStd:
         for tname in listofobjects:
             print "tname=", tname
             a = self.load(tname)
-            a = self.normalizeFlux(a)
+            if (normalizeFlux):
+                a = self.normalizeFlux(a)
             a.shape
             x = a[:,0]
             y = a[:,1]
