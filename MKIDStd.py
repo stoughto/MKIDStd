@@ -61,20 +61,8 @@ class MKIDStd:
             
         ergs = string.count(self.objects[name]['fluxUnit'][0],"ergs")
         if ergs:
-<<<<<<< HEAD
-            a[:,1]/= a[:,0]
-        mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
-        if mag:
-            a[:,1] = 10**(-.04*a[:,1])/ a[:,0]
-=======
-            a[:,1] /= a[:,0]
-        mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
-        if mag:
-            a[:,1] = 10**(-.04*a[:,1]) / a[:,0]
-
->>>>>>> 545236ac23cc69c628f2d96f005dcedf61909474
-        referenceFlux = self.getFluxAtReferenceWavelength(a)
-        a[:,1] /= referenceFlux
+	    referenceFlux = self.getFluxAtReferenceWavelength(a)
+            a[:,1] /= referenceFlux
         return a
 
     def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000]):
