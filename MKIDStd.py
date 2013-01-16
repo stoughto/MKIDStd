@@ -61,10 +61,18 @@ class MKIDStd:
             
         ergs = string.count(self.objects[name]['fluxUnit'][0],"ergs")
         if ergs:
+<<<<<<< HEAD
             a[:,1]/= a[:,0]
         mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
         if mag:
             a[:,1] = 10**(-.04*a[:,1])/ a[:,0]
+=======
+            a[:,1] /= a[:,0]
+        mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
+        if mag:
+            a[:,1] = 10**(-.04*a[:,1]) / a[:,0]
+
+>>>>>>> 545236ac23cc69c628f2d96f005dcedf61909474
         referenceFlux = self.getFluxAtReferenceWavelength(a)
         a[:,1] /= referenceFlux
         return a
@@ -170,3 +178,28 @@ class MKIDStd:
         for i in range(n):
             retval[i][1] = f[1].data[i][0]
         return retval
+
+    def report(self, xlim=[900,3000000]):
+	for name in self.objects.keys():
+	    fluxUnit = self.objects[name]['fluxUnit'][0]
+	    wavelengthUnit = self.objects[name]['wavlengthUnit'][0]
+	    citation = self.objects[name]['citation'][0]
+	    description = self.objects[name]['description'][0]
+	    a = self.load(name)
+            a.shape
+	    points = a[:,1].size
+            x = a[:,0]
+            y = a[:,1]
+	    imin = numpy.searchsorted(x,xlim[0])
+            imax = numpy.searchsorted(x,xlim[1])
+            xtemp = x[imin:imax]
+            xmin = abs(xtemp).min()
+            xmax = xtemp.max()
+	    WavelengthMin = xmin
+	    WavelengthMax = xmax
+	    print "--------------------------------------------------------------------------"
+	    print "Name: %s" %name
+	    print "Units: Flux: %s Wavelength: %s " %(fluxUnit, wavelengthUnit) 
+	    print "Citation: %s" %citation
+	    print "Description: %s." %description
+	    print "Number of Points: %d Wavelength: Max =%9.3f Min = %10.3f" %(points, WavelengthMin, WavelengthMax)

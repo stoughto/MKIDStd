@@ -1,0 +1,66 @@
+\documentclass[11pt]{amsart}
+\usepackage{geometry}                % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}                   % ... or a4paper or a5paper or ... 
+%\geometry{landscape}                % Activate for for rotated page geometry
+%\usepackage[parfill]{parskip}    % Activate to begin paragraphs with an empty line rather than an indent
+\usepackage{graphicx}
+\usepackage{amssymb}
+\usepackage{epstopdf}
+\usepackage{url}
+\DeclareGraphicsRule{.tif}{png}{.png}{`convert #1 `dirname #1`/`basename #1 .tif`.png}
+
+\title{Spectroscopic Units}
+\author{Chris Stoughton}
+\date{}                                           % Activate to display a given date or no date
+
+
+\def\Var{\mathop{\rm Var}} 
+
+\begin{document}
+\maketitle
+
+Spectra are expressed in various units:
+\begin{itemize}
+\item $F_\gamma$ =photons/cm$^2$/$\AA$/sec
+\item $F_\lambda$ = ergs/cm$^2$/$\AA$/sec
+\item $F_\nu$ = ergs/cm$^2$/Hz/sec
+\item $F_{AB}$ =  Magnitude
+\end{itemize}
+
+We express spectra in $F_\gamma$.  The spectra we gathered for MKIDStd
+may be expressed in other units.
+
+For spectra expressed in $F_\lambda$, we use $E=h\nu$ and $c = \lambda\nu$:
+\begin{equation}
+F_\gamma = F_\lambda \lambda / hc
+\end{equation}
+
+The python package scipy.constants is a convenient way to get constants.
+\begin{verbatim}
+from scipy.constants import *
+\end{verbatim}
+defines h=6.62606957e-34 Joule$\cdot$sec and c=299792458.0
+meters/sec.
+
+For $\lambda$ expressed in $\AA$:
+
+\begin{equation}
+F_\gamma = F_\lambda \times \lambda(\AA) \times \frac{10^{-10} m/\AA}{ch10^7 erg/J} =  K \times F_\lambda \times \lambda(\AA)
+\end{equation}
+where $K=5.03E7$/erg/$\AA$. 
+
+Some spectra are expressed in AB magnitudes.  Our good friends at
+\url{http://en.wikipedia.org/wiki/AB_magnitude} tell us that
+when flux is in erg/s/cm$^2$/$\AA$ the AB flux is
+\begin{equation}
+AB = -2.5\log_{10}{F_\lambda} -  5\log_{10}\lambda - 2.406
+\end{equation}
+Given an AB magnitude and $\lambda$ in $\AA$,
+\begin{equation}
+F_\lambda = (10^{-2.406/2.5})(10^{-0.4AB})/\lambda^2
+\end{equation}
+
+
+
+
+\end{document}
