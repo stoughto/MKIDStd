@@ -61,10 +61,10 @@ class MKIDStd:
             
         ergs = string.count(self.objects[name]['fluxUnit'][0],"ergs")
         if ergs:
-            a[:,1]*= a[:,0]
+            a[:,1]/= a[:,0]
         mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
         if mag:
-            a[:,1] = 10**(-.04*a[:,1])* a[:,0]
+            a[:,1] = 10**(-.04*a[:,1])/ a[:,0]
         referenceFlux = self.getFluxAtReferenceWavelength(a)
         a[:,1] /= referenceFlux
         return a
