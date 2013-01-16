@@ -166,6 +166,19 @@ class MKIDStd:
         print "plotname=", plotname
         plt.savefig(plotname+'.png')
 	
+
+    def plotfilters(self):
+        plt.clf()
+        listoffilters = self.filterList
+        for filter in listoffilters:
+            a = self.filters[filter]
+            y = a[1,:]
+            x = a[0,:]
+            plt.plot(x,y, label=filter)
+            plt.legend()
+            plt.savefig('filters'+'.png')
+        
+
     def getFluxAtReferenceWavelength(self, a):
         """
         returns the flux value corresponding with the reference
