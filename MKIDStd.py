@@ -68,14 +68,12 @@ class MKIDStd:
             
         ergs = string.count(self.objects[name]['fluxUnit'][0],"ergs")
         if ergs:
-            a[:,1]\= a[:,0]/hc
+            a[:,1] *= (a[:,0] * 5.03*10**7)
         mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
         if mag:
-            a[:,1] = 10**(-.04*a[:,1])/ a[:,0]
-            a[:,1] /= a[:,0]
-        mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
-        if mag:
-            a[:,1] = 10**(-.04*a[:,1]) / a[:,0]
+            a[:,1] = (10**(-2.406/2.5))*(10**(-0.4*a[:,1]))/(a[:,0]**2) * (a[:,0] * 5.03*10**7)
+        return a
+    def normalizeFlux(self,a):
         referenceFlux = self.getFluxAtReferenceWavelength(a)
         a[:,1] /= referenceFlux
         return a
@@ -110,6 +108,7 @@ class MKIDStd:
         for tname in listofobjects:
             print "tname=", tname
             a = self.load(tname)
+            a = self.normalizeFlux(a)
             a.shape
             x = a[:,0]
             y = a[:,1]
