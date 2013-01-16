@@ -6,11 +6,8 @@ import types
 import string
 import pyfits
 import smooth
-
 import sys
-
 from scipy.constants import *
-
 
 class MKIDStd:
     """
@@ -72,14 +69,8 @@ class MKIDStd:
             a[:,1] = smooth.smooth(a[:,1], window_len=len)[len/2:-(len/2)]
             
         ergs = string.count(self.objects[name]['fluxUnit'][0],"ergs")
-
         if ergs:
-<<<<<<< HEAD
             a[:,1] *= (a[:,0] * 5.03*10**7)
-=======
-            
-	    a[:,1]/= a[:,0]/hc
->>>>>>> d5d1c33f59d766b84ee5268eb2981ac11354bf03
         mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
         if mag:
             a[:,1] = (10**(-2.406/2.5))*(10**(-0.4*a[:,1]))/(a[:,0]**2) * (a[:,0] * 5.03*10**7)
