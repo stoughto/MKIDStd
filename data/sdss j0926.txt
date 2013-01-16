@@ -2,5 +2,5 @@ dataFile = spSpecText-52995-1274-505.csv
 citation = SDSS
 wavlengthUnit = angstrom
 fluxUnit = ergs/sec/angstrom/cm^2
-description =
+description = a sloan digital sky survey object
 window_len = 31
