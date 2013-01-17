@@ -39,6 +39,11 @@ class MKIDStd:
         self.lymanwavelengths = [1216,1026,973,950,938,931,926,923,921,919]
 
         self._loadFilterFile()
+        self.k = (1*10**-10/1*10**7)/h/c
+        """
+        h is in Joules/sec and c is in meters/sec. This k value is used in all unit conversions
+        """
+
 
     def _loadFilterFile(self):
         filterFileName = os.path.join(self.this_dir,"data","ph08_UBVRI.mht")
@@ -91,10 +96,10 @@ class MKIDStd:
             
         ergs = string.count(self.objects[name]['fluxUnit'][0],"ergs")
         if ergs:
-            a[:,1] *= (a[:,0] * 5.03*10**7)
+            a[:,1] *= (a[:,0] * self.k)
         mag = string.count(self.objects[name]['fluxUnit'][0],"mag")
         if mag:
-            a[:,1] = (10**(-2.406/2.5))*(10**(-0.4*a[:,1]))/(a[:,0]**2) * (a[:,0] * 5.03*10**7)
+            a[:,1] = (10**(-2.406/2.5))*(10**(-0.4*a[:,1]))/(a[:,0]**2) * (a[:,0] * self.k)
         return a
 
     def normalizeFlux(self,a):
@@ -103,9 +108,9 @@ class MKIDStd:
         return a
 
     def countsToErgs(self,a):
-        """
-        Alex needs to write this.  Convert from photons to ergs
-        """        
+        a[:,1] /= (a[:,0] * self.k)
+        return a
+    
     def measureBandPassFlux(self,aFlux,aFilter):
         sum = 0;
         filter = numpy.interp(aFlux[:,0], aFilter[0,:], aFilter[1,:], 0, 0)
@@ -113,10 +118,10 @@ class MKIDStd:
             dw = aFlux[i+1,0] - aFlux[i,0]
             flux = aFlux[i,1]*filter[i]/aFlux[i,0]
             sum += flux*dw
-        sum /= 5.03*10**7
+        sum /= self.k
         return sum
 
-    def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000],normalizeFlux=True):
+    def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000],normalizeFlux=True,countsToErgs=False):
         """
         Returns a graph that plots the arrays a[:,0] (wavelength) and
         a[:,1] (flux) with balmer wavelengths indicated. Individual
@@ -146,6 +151,8 @@ class MKIDStd:
         for tname in listofobjects:
             print "tname=", tname
             a = self.load(tname)
+            if (countsToErgs):
+                a = self.countsToErgs(a)
             if (normalizeFlux):
                 a = self.normalizeFlux(a)
             a.shape
@@ -171,7 +178,10 @@ class MKIDStd:
             plt.plot([x,x],[plotYMin,plotYMax], 'r--')
        
         plt.xlabel('wavelength(Angstroms)')
-        plt.ylabel('flux(counts)['+str(self.referenceWavelength)+']')
+        if (countsToErgs):
+            plt.ylabel('flux(ergs)')
+        else:
+            plt.ylabel('flux(counts)['+str(self.referenceWavelength)+']')
         ax = plt.subplot(111)
         box = ax.get_position()
         ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
@@ -234,6 +244,10 @@ class MKIDStd:
         return retval
 
     def report(self, xlim=[500,10000000]):
+        """
+        Creates a text document that reports the units, citation, and
+        description of each object
+        """
 	old_stdout = sys.stdout
 	log_file = open("Report.log","w")
 	sys.stdout = log_file
