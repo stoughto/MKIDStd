@@ -19,7 +19,7 @@ class TestUnitConversion(unittest.TestCase):
         plt.subplot(212)
         plt.plot(aOriginal[:,0],f, label='ergs')
         plt.legend()
-        plt.show()
+        plt.savefig('hiltner600'+'.png')
       
     def testMagtoCounts(self):
         std = MKIDStd.MKIDStd()

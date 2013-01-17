@@ -1,7 +1,15 @@
 import unittest
 import numpy as np
 import math
+import MKIDStd
 class TestAB(unittest.TestCase):
+
+    def testMeasureBandPassFlux(self):
+        std = MKIDStd.MKIDStd()
+        aFlux = std.load("vega")
+        aFilter = std.filters['U']
+        bpf = std.measureBandPassFlux(aFlux,aFilter)
+        print "bpf=",bpf
 
     def testConvert(self):
         """

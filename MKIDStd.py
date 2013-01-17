@@ -103,7 +103,9 @@ class MKIDStd:
         return a
 
     def countsToErgs(self,a):
-        
+        """
+        Alex needs to write this.  Convert from photons to ergs
+        """        
     def measureBandPassFlux(self,aFlux,aFilter):
         sum = 0;
         filter = numpy.interp(aFlux[:,0], aFilter[0,:], aFilter[1,:], 0, 0)
@@ -114,9 +116,7 @@ class MKIDStd:
         sum /= 5.03*10**7
         return sum
 
-    
-
-    def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000]):
+    def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000],normalizeFlux=True):
         """
         Returns a graph that plots the arrays a[:,0] (wavelength) and
         a[:,1] (flux) with balmer wavelengths indicated. Individual
@@ -146,7 +146,8 @@ class MKIDStd:
         for tname in listofobjects:
             print "tname=", tname
             a = self.load(tname)
-            a = self.normalizeFlux(a)
+            if (normalizeFlux):
+                a = self.normalizeFlux(a)
             a.shape
             x = a[:,0]
             y = a[:,1]
@@ -180,6 +181,19 @@ class MKIDStd:
         print "plotname=", plotname
         plt.savefig(plotname+'.png')
 	
+
+    def plotfilters(self):
+        plt.clf()
+        listoffilters = self.filterList
+        for filter in listoffilters:
+            a = self.filters[filter]
+            y = a[1,:]
+            x = a[0,:]
+            plt.plot(x,y, label=filter)
+            plt.legend()
+            plt.savefig('filters'+'.png')
+        
+
     def getFluxAtReferenceWavelength(self, a):
         """
         returns the flux value corresponding with the reference
