@@ -96,11 +96,25 @@ class MKIDStd:
         if mag:
             a[:,1] = (10**(-2.406/2.5))*(10**(-0.4*a[:,1]))/(a[:,0]**2) * (a[:,0] * 5.03*10**7)
         return a
+
     def normalizeFlux(self,a):
         referenceFlux = self.getFluxAtReferenceWavelength(a)
         a[:,1] /= referenceFlux
-
         return a
+
+    def countsToErgs(self,a):
+        
+    def measureBandPassFlux(self,aFlux,aFilter):
+        sum = 0;
+        filter = numpy.interp(aFlux[:,0], aFilter[0,:], aFilter[1,:], 0, 0)
+        for i in range(aFlux[:,0].size-1):
+            dw = aFlux[i+1,0] - aFlux[i,0]
+            flux = aFlux[i,1]*filter[i]/aFlux[i,0]
+            sum += flux*dw
+        sum /= 5.03*10**7
+        return sum
+
+    
 
     def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000]):
         """
