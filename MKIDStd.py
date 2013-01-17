@@ -146,8 +146,8 @@ class MKIDStd:
             plotname = name
             listofobjects = [name]
         plt.clf()
-        plotYMin = 1
-        plotYMax = 1
+        plotYMin = -1
+        plotYMax = -1
         for tname in listofobjects:
             print "tname=", tname
             a = self.load(tname)
@@ -171,22 +171,34 @@ class MKIDStd:
             ytemp = y[imin:imax]
             ymin = abs(ytemp).min()
             ymax = ytemp.max()
-            plotYMin = min(plotYMin,ymin)
-            plotYMax = max(plotYMax,ymax)
+            if (plotYMin == -1):
+                plotYMin = ymin
+                plotYMax = ymax
+            else:
+                plotYMin = min(plotYMin,ymin)
+                plotYMax = max(plotYMax,ymax)
+            print "ymax=",ymax, "plotYMax=",plotYMax
         
         for x in self.balmerwavelengths:
             plt.plot([x,x],[plotYMin,plotYMax], 'r--')
        
         plt.xlabel('wavelength(Angstroms)')
+        
         if (countsToErgs):
-            plt.ylabel('flux(ergs)')
+            ylabel = 'flux(ergs/sec/cm2/A)'
         else:
-            plt.ylabel('flux(counts)['+str(self.referenceWavelength)+']')
+            ylabel = 'flux(counts/sec/cm2/A)'
+
+        if (normalizeFlux):
+            ylabel += '['+str(self.referenceWavelength)+']'
+
+        plt.ylabel(ylabel)
         ax = plt.subplot(111)
         box = ax.get_position()
         ax.set_position([box.x0, box.y0, box.width * 0.8, box.height])
         ax.legend(bbox_to_anchor=(1.05,1), loc=2, prop={'size':10}, borderaxespad=0.)
         plt.xlim(xlim)
+        print "set ylim with plotYMin=",plotYMin,"  plotYMax=",plotYMax
         plt.ylim([plotYMin,plotYMax])
         print "plotname=", plotname
         plt.savefig(plotname+'.png')
