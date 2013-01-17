@@ -112,13 +112,16 @@ class MKIDStd:
         return a
     
     def measureBandPassFlux(self,aFlux,aFilter):
-        sum = 0;
-        filter = numpy.interp(aFlux[:,0], aFilter[0,:], aFilter[1,:], 0, 0)
+        sum = 0
+        sumd = 0
+		filter = numpy.interp(aFlux[:,0], aFilter[0,:], aFilter[1,:], 0, 0)
         for i in range(aFlux[:,0].size-1):
             dw = aFlux[i+1,0] - aFlux[i,0]
             flux = aFlux[i,1]*filter[i]/aFlux[i,0]
             sum += flux*dw
-        sum /= self.k
+            sumd += filter[i]*dw
+            sum /= self.k
+            sum /= sumd
         return sum
 
     def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000],normalizeFlux=True,countsToErgs=False):
