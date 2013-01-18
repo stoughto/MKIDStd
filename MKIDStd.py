@@ -8,7 +8,7 @@ import pyfits
 import smooth
 import sys
 from scipy.constants import *
-
+import math
 class MKIDStd:
     """
     This class contains the spectra of several standard stars. These
@@ -41,10 +41,12 @@ class MKIDStd:
         self._loadFilterFile()
         self._loadfilters()
         self.k = (1*10**-10/1*10**7)/h/c
-        """
-        h is in Joules/sec and c is in meters/sec. This k value is used in all unit conversions
-        """
 
+        
+        # h is in Joules/sec and c is in meters/sec. 
+        # This k value is used in conversions between counts and ergs
+        self.k = (1*10**-10/1*10**7)/h/c
+        self.vegaInCounts = "not loaded yet"
 
     def _loadFilterFile(self):
             
@@ -129,9 +131,24 @@ class MKIDStd:
             flux = aFlux[i,1]*filter[i]/aFlux[i,0]
             sum += flux*dw
             sumd += filter[i]*dw
-            sum /= self.k
-            sum /= sumd
+        sum /= self.k
+        sum /= sumd
         return sum
+
+    def getVegaMag(self, aFlux, aFilter):
+        if self.vegaInCounts == "not loaded yet":
+            self.vegaInCounts = self.load("vega")
+        sumNumerator = 0.0
+        sumDenominator = 0.0
+        filter = numpy.interp(aFlux[:,0], aFilter[0,:], aFilter[1,:], 0, 0)
+        vFlux = numpy.interp(
+            aFlux[:,0], self.vegaInCounts[:,0], self.vegaInCounts[:,1], 0, 0)
+        for i in range(aFlux[:,0].size-1):
+            dw = aFlux[i+1,0] - aFlux[i,0]
+            sumNumerator += aFlux[i,1]*filter[i]*dw
+            sumDenominator += vFlux[i]*filter[i]*dw
+        mag = -2.5*math.log10(sumNumerator/sumDenominator) + 0.03
+        return mag
 
     def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000],normalizeFlux=True,countsToErgs=False):
         """
@@ -267,7 +284,7 @@ class MKIDStd:
             retval[i][1] = f[1].data[i][0]
         return retval
 
-    def report(self, xlim=[500,10000000]):
+    def report(self):
         """
         Creates a text document that reports the units, citation, and
         description of each object
@@ -285,19 +302,17 @@ class MKIDStd:
 	    points = a[:,1].size
             x = a[:,0]
             y = a[:,1]
-	    imin = numpy.searchsorted(x,xlim[0])
-            imax = numpy.searchsorted(x,xlim[1])
-            xtemp = x[imin:imax]
-            xmin = abs(xtemp).min()
-            xmax = xtemp.max()
-	    WavelengthMin = xmin
-	    WavelengthMax = xmax
-	    print "---------------------------------------------------------------------------------------"
+            xmin = x.min()
+            xmax = x.max()
+            bMag = self.getVegaMag(a,self.filters['B'])
+            vMag = self.getVegaMag(a,self.filters['V'])
+            bmv = bMag - vMag
+	    print "------------------------------------------------------------"
 	    print "Name: %s" %name
 	    print "Units: Flux: %s Wavelength: %s " %(fluxUnit, wavelengthUnit) 
 	    print "Citation: %s" %citation
 	    print "Description: %s." %description
-	    print "Number of Points: %d Wavelength: Max =%9.3f Min = %10.3f" %(points, WavelengthMin, WavelengthMax)
-	    
+            print "V=%f  B-V=%f" % (vMag, bmv)
+	    print "Number of Points: %d Wavelength: Max =%9.3f Min = %10.3f" %(points, xmin, xmax)
 	sys.stdout = old_stdout
 	log_file.close()
