@@ -104,11 +104,11 @@ class MKIDStd:
             a = self.loadSdssSpecFits(fullFileName)
         else:
             a = numpy.loadtxt(fullFileName)
-
+            
         len = int(self.objects[name]['window_len'][0])
         if len > 1:
             a[:,1] = smooth.smooth(a[:,1], window_len=len)[len/2:-(len/2)]
-            
+                    
         try:
             fluxUnit = self.objects[name]['fluxUnit'][0]
             scale = float(fluxUnit.split()[0])
@@ -123,8 +123,6 @@ class MKIDStd:
             a[:,1] = (10**(-2.406/2.5))*(10**(-0.4*a[:,1]))/(a[:,0]**2) * (a[:,0] * self.k)
         return a
     
-    
-
     def normalizeFlux(self,a):
         referenceFlux = self.getFluxAtReferenceWavelength(a)
         a[:,1] /= referenceFlux
