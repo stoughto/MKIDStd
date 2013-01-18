@@ -27,7 +27,7 @@ class MKIDStd:
         self.referenceWavelength=referenceWavelength
         self.objects = {}
         self.filters = {}
-        self.filterList = ['U','B','V','R','I']
+        self.filterList = ['U','B','V','R','I','g','i','r','u','z']
         self.this_dir, this_filename = os.path.split(__file__)        
 
         pattern = os.path.join(self.this_dir,"data","*.txt")
@@ -39,6 +39,7 @@ class MKIDStd:
         self.lymanwavelengths = [1216,1026,973,950,938,931,926,923,921,919]
 
         self._loadFilterFile()
+        self._loadfilters()
         self.k = (1*10**-10/1*10**7)/h/c
         """
         h is in Joules/sec and c is in meters/sec. This k value is used in all unit conversions
@@ -46,6 +47,7 @@ class MKIDStd:
 
 
     def _loadFilterFile(self):
+            
         filterFileName = os.path.join(self.this_dir,"data","ph08_UBVRI.mht")
         f = open(filterFileName,'r')
         nFilter = -1
@@ -66,7 +68,14 @@ class MKIDStd:
                 vals = line.split()
                 self.filters[filter][0,iRead] = vals[0]
                 self.filters[filter][1,iRead] = vals[1]
-                iRead += 1
+                iRead += 1    
+
+    def _loadfilters(self):
+        for filter in ['u','g','i','r','z']:
+            filterFileName = os.path.join(self.this_dir,"data",filter+'.mht')
+            numpy.loadtxt(filterFileName)
+            self.filters[filter] = numpy.zeros((1,4))
+            
 
     def _loadDictionary(self,file):
         retval = {}
@@ -114,7 +123,7 @@ class MKIDStd:
     def measureBandPassFlux(self,aFlux,aFilter):
         sum = 0
         sumd = 0
-		filter = numpy.interp(aFlux[:,0], aFilter[0,:], aFilter[1,:], 0, 0)
+        filter = numpy.interp(aFlux[:,0], aFilter[0,:], aFilter[1,:], 0, 0)
         for i in range(aFlux[:,0].size-1):
             dw = aFlux[i+1,0] - aFlux[i,0]
             flux = aFlux[i,1]*filter[i]/aFlux[i,0]
