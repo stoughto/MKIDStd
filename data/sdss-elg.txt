@@ -4,3 +4,4 @@ wavlengthUnit = angstrom
 fluxUnit = ergs/sec/angstrom/cm^2
 description = a stellar object
 window_len = 31
+fluxScaleFactor = 1e-17
