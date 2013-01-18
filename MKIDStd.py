@@ -326,8 +326,8 @@ class MKIDStd:
             y = a[:,1]
             xmin = x.min()
             xmax = x.max()
-            bMag = self.getVegaMag(a,self.filters['B'])
-            vMag = self.getVegaMag(a,self.filters['V'])
+            bMag = self.getVegaMag(name,'B')
+            vMag = self.getVegaMag(name,'V')
             bmv = bMag - vMag
             print "------------------------------------------------------------"
             print "Name: %s" %name
