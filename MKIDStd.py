@@ -38,8 +38,8 @@ class MKIDStd:
         self.balmerwavelengths = [6563,4861,4341,4102,3970,3889,3835,3646]
         self.lymanwavelengths = [1216,1026,973,950,938,931,926,923,921,919]
 
-        self._loadFilterFile()
-        self._loadfilters()
+        self._loadUBVRIFilters()
+        self._loadSDSSFilters()
         self.k = (1*10**-10/1*10**7)/h/c
 
         
@@ -48,7 +48,7 @@ class MKIDStd:
         self.k = (1*10**-10/1*10**7)/h/c
         self.vegaInCounts = "not loaded yet"
 
-    def _loadFilterFile(self):
+    def _loadUBVRIFilters(self):
             
         filterFileName = os.path.join(self.this_dir,"data","ph08_UBVRI.mht")
         f = open(filterFileName,'r')
@@ -72,11 +72,15 @@ class MKIDStd:
                 self.filters[filter][1,iRead] = vals[1]
                 iRead += 1    
 
-    def _loadfilters(self):
+    def _loadSDSSFilters(self):
         for filter in ['u','g','i','r','z']:
             filterFileName = os.path.join(self.this_dir,"data",filter+'.mht')
-            numpy.loadtxt(filterFileName)
-            self.filters[filter] = numpy.zeros((1,4))
+            temp = numpy.loadtxt(filterFileName)
+            npts = temp.shape[0]
+            self.filters[filter] = numpy.zeros((2,npts))
+            for i in range(npts):
+                self.filters[filter][0,i] = temp[i,0]
+                self.filters[filter][1,i] = temp[i,3]
             
 
     def _loadDictionary(self,file):
