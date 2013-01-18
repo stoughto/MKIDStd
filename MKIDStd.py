@@ -29,7 +29,6 @@ class MKIDStd:
         self.filters = {}
         self.filterList = ['U','B','V','R','I','g','i','r','u','z']
         self.this_dir, this_filename = os.path.split(__file__)        
-
         pattern = os.path.join(self.this_dir,"data","*.txt")
         for file in glob.glob(pattern):
             name,ext = os.path.splitext(os.path.basename(file))
@@ -37,15 +36,11 @@ class MKIDStd:
             self.objects[name] = dictionary
         self.balmerwavelengths = [6563,4861,4341,4102,3970,3889,3835,3646]
         self.lymanwavelengths = [1216,1026,973,950,938,931,926,923,921,919]
-
-        self._loadUBVRIFilters()
-        self._loadSDSSFilters()
+        self._loadFilterFile()
+        self._loadfilters()
         self.k = (1*10**-10/1*10**7)/h/c
-
-        
         # h is in Joules/sec and c is in meters/sec. 
         # This k value is used in conversions between counts and ergs
-        self.k = (1*10**-10/1*10**7)/h/c
         self.vegaInCounts = "not loaded yet"
 
     def _loadUBVRIFilters(self):
@@ -108,7 +103,6 @@ class MKIDStd:
         len = int(self.objects[name]['window_len'][0])
         if len > 1:
             a[:,1] = smooth.smooth(a[:,1], window_len=len)[len/2:-(len/2)]
-                    
         try:
             fluxUnit = self.objects[name]['fluxUnit'][0]
             scale = float(fluxUnit.split()[0])
@@ -223,20 +217,15 @@ class MKIDStd:
                 plotYMin = min(plotYMin,ymin)
                 plotYMax = max(plotYMax,ymax)
             print "ymax=",ymax, "plotYMax=",plotYMax
-        
         for x in self.balmerwavelengths:
             plt.plot([x,x],[plotYMin,plotYMax], 'r--')
-       
         plt.xlabel('wavelength(Angstroms)')
-        
         if (countsToErgs):
             ylabel = 'flux(ergs/sec/cm2/A)'
         else:
             ylabel = 'flux(counts/sec/cm2/A)'
-
         if (normalizeFlux):
             ylabel += '['+str(self.referenceWavelength)+']'
-
         plt.ylabel(ylabel)
         ax = plt.subplot(111)
         box = ax.get_position()
@@ -247,7 +236,6 @@ class MKIDStd:
         plt.ylim([plotYMin,plotYMax])
         print "plotname=", plotname
         plt.savefig(plotname+'.png')
-	
 
     def plotfilters(self):
         plt.clf()
@@ -259,7 +247,6 @@ class MKIDStd:
             plt.plot(x,y, label=filter)
             plt.legend()
             plt.savefig('filters'+'.png')
-        
 
     def getFluxAtReferenceWavelength(self, a):
         """
@@ -268,19 +255,18 @@ class MKIDStd:
         """
         x = a[:,0]
         y = a[:,1]
-	index = numpy.searchsorted(x, self.referenceWavelength);
+        index = numpy.searchsorted(x, self.referenceWavelength);
         if index < 0:
             index = 0
         if index > x.size - 1:
             index = x.size - 1
             print "index=", index
-	return y[index]
+        return y[index]
 
     def ShowUnits(self):
         """
         Returns flux units for the spectra of objects.
         """
-
         for name in self.objects.keys():
             fluxUnit = self.objects[name]['fluxUnit']
             print name, " ", fluxUnit
@@ -305,17 +291,17 @@ class MKIDStd:
         Creates a text document that reports the units, citation, and
         description of each object
         """
-	old_stdout = sys.stdout
-	log_file = open("Report.log","w")
-	sys.stdout = log_file
-	for name in self.objects.keys():
-	    fluxUnit = self.objects[name]['fluxUnit'][0]
-	    wavelengthUnit = self.objects[name]['wavlengthUnit'][0]
-	    citation = self.objects[name]['citation'][0]
-	    description = self.objects[name]['description'][0]
-	    a = self.load(name)
+        old_stdout = sys.stdout
+        log_file = open("Report.log","w")
+        sys.stdout = log_file
+        for name in self.objects.keys():
+            fluxUnit = self.objects[name]['fluxUnit'][0]
+            wavelengthUnit = self.objects[name]['wavlengthUnit'][0]
+            citation = self.objects[name]['citation'][0]
+            description = self.objects[name]['description'][0]
+            a = self.load(name)
             a.shape
-	    points = a[:,1].size
+            points = a[:,1].size
             x = a[:,0]
             y = a[:,1]
             xmin = x.min()
@@ -323,12 +309,12 @@ class MKIDStd:
             bMag = self.getVegaMag(a,self.filters['B'])
             vMag = self.getVegaMag(a,self.filters['V'])
             bmv = bMag - vMag
-	    print "------------------------------------------------------------"
-	    print "Name: %s" %name
-	    print "Units: Flux: %s Wavelength: %s " %(fluxUnit, wavelengthUnit) 
-	    print "Citation: %s" %citation
-	    print "Description: %s." %description
+            print "------------------------------------------------------------"
+            print "Name: %s" %name
+            print "Units: Flux: %s Wavelength: %s " %(fluxUnit, wavelengthUnit) 
+            print "Citation: %s" %citation
+            print "Description: %s." %description
             print "V=%f  B-V=%f" % (vMag, bmv)
-	    print "Number of Points: %d Wavelength: Max =%9.3f Min = %10.3f" %(points, xmin, xmax)
-	sys.stdout = old_stdout
-	log_file.close()
+            print "Number of Points: %d Wavelength: Max =%9.3f Min = %10.3f" %(points, xmin, xmax)
+        sys.stdout = old_stdout
+        log_file.close()
