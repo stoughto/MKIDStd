@@ -23,6 +23,7 @@ class MKIDStd:
         """
         Loads up the list of objects we know about
         The reference wavelength is set at 6500 if _init_()
+        Also contains the list of filters and balmer wavelengths
         """
         self.referenceWavelength=referenceWavelength
         self.objects = {}
@@ -92,6 +93,7 @@ class MKIDStd:
         Angstroms and a[:,1] is flux in counts/sec/angstrom/cm^2
         
         Plots containing a lot of noise are smoothed.
+        Ergs and AB Mag units are automatically converted to counts.
         """
         fname = self.objects[name]['dataFile']
         fullFileName = os.path.join(self.this_dir,"data",fname[0])
@@ -118,15 +120,25 @@ class MKIDStd:
         return a
     
     def normalizeFlux(self,a):
+        """
+        This function normalizes the flux at the reference wavelength of
+        6500.
+        """
         referenceFlux = self.getFluxAtReferenceWavelength(a)
         a[:,1] /= referenceFlux
         return a
 
     def countsToErgs(self,a):
+        """
+        This function changes the units of the spectra  from counts to ergs. 
+        """
         a[:,1] /= (a[:,0] * self.k)
         return a
     
     def measureBandPassFlux(self,aFlux,aFilter):
+        """
+        This function measures the band pass flux of the filters
+        """
         sum = 0
         sumd = 0
         filter = numpy.interp(aFlux[:,0], aFilter[0,:], aFilter[1,:], 0, 0)
@@ -155,6 +167,9 @@ class MKIDStd:
         return mag
 
     def getVegaMag(self,name,Filter):
+        """
+        Returns the magnitude of the desired object at the desired filter.
+        """
         aFlux = self.load(name)
         aFilter = self.filters[Filter]
         a = self._getVegaMag(aFlux, aFilter)
@@ -170,9 +185,10 @@ class MKIDStd:
         stars.
         plot('vega') returns the spectrum for only that star.
         The y array for each plot is presented as a logarithm, while the 
-        x array is linear if plot()
-        x limits are set between 3,000 and 10,000 and y limits are calculated based
-        on those values.
+        x array is linear if plot(). This is an optional perameter and can be changed by setting xlog and ylog to true or false when calling the function.
+        x limits are set between 3,000 and 10,000 and y limits are calculated based on those values. The x limits are optional and can be altered when calling the function.
+        The flux values are automatically set to counts, but they can be changed to ergs by setting countsToErgs=True when calling the function.
+        The flux is automatically normalized, but one can choose to not normalize the flux by setting normalizeFlux=False when calling the function.
         Plots are saved as plotname.png
         """
         if (name == "all"):
@@ -238,6 +254,10 @@ class MKIDStd:
         plt.savefig(plotname+'.png')
 
     def plotfilters(self):
+        """
+        Plots all filters.  This includes both the UBVRI and the SDSS filters. Note that the array is reversed, compared to that used by the plot() function.
+        The plot made by the filters is saved as filters.png
+        """
         plt.clf()
         listoffilters = self.filterList
         for filter in listoffilters:
@@ -288,8 +308,8 @@ class MKIDStd:
 
     def report(self):
         """
-        Creates a text document that reports the units, citation, and
-        description of each object
+        Creates a text document that reports the units, citation,magnitude, and
+        description of each object.
         """
         old_stdout = sys.stdout
         log_file = open("Report.log","w")
