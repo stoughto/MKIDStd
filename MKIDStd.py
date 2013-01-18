@@ -11,19 +11,23 @@ from scipy.constants import *
 import math
 class MKIDStd:
     """
-    This class contains the spectra of several standard stars. These
+    This class contains the spectra of several standard stars and other
+    objects.. These
     spectra may be plotted and used to compare with data from the MKID
     detector.
 
-    Wavelength and flux values  and text files describing each object are saved in
-    data.
+    Wavelength and flux values  and text files describing each object are
+    saved in the data directory. Each object is described in a .txt file.
+    This file lists the file name that contains the data, the units, a 
+    citation, and a brief description of the object. 
     """
 
     def __init__(self, referenceWavelength=6500):
         """
-        Loads up the list of objects we know about
-        The reference wavelength is set at 6500 if _init_()
-        Also contains the list of filters and balmer wavelengths
+        Loads up the list of objects we know about, filters, and
+        Balmer wavelengths.
+        The reference wavelength, used when plotting is set at 6500 
+        if _init_()
         """
         self.referenceWavelength=referenceWavelength
         self.objects = {}
@@ -89,10 +93,10 @@ class MKIDStd:
     def load(self,name):
         """
         Returns a two dimensional numpy array where a[:,0] is
-        wavelength in
-        Angstroms and a[:,1] is flux in counts/sec/angstrom/cm^2
+        wavelength in Angstroms and a[:,1] is flux in 
+        counts/sec/angstrom/cm^2
         
-        Plots containing a lot of noise are smoothed.
+        Noisy spectra are smoothed with window_len in the .txt file.
         Ergs and AB Mag units are automatically converted to counts.
         """
         fname = self.objects[name]['dataFile']
@@ -121,8 +125,7 @@ class MKIDStd:
     
     def normalizeFlux(self,a):
         """
-        This function normalizes the flux at the reference wavelength of
-        6500.
+        This function normalizes the flux at self.referenceWavelength
         """
         referenceFlux = self.getFluxAtReferenceWavelength(a)
         a[:,1] /= referenceFlux
@@ -130,14 +133,16 @@ class MKIDStd:
 
     def countsToErgs(self,a):
         """
-        This function changes the units of the spectra  from counts to ergs. 
+        This function changes the units of the spectra  from counts to 
+        ergs. 
         """
         a[:,1] /= (a[:,0] * self.k)
         return a
     
     def measureBandPassFlux(self,aFlux,aFilter):
         """
-        This function measures the band pass flux of the filters
+        This function measures the band pass flux of the object in the
+        filter.
         """
         sum = 0
         sumd = 0
@@ -177,18 +182,32 @@ class MKIDStd:
 
     def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000],normalizeFlux=True,countsToErgs=False):
         """
-        Returns a graph that plots the arrays a[:,0] (wavelength) and
+        Makes a png file that plots the arrays a[:,0] (wavelength) and
         a[:,1] (flux) with balmer wavelengths indicated. Individual
         spectra are labeled and indicated by a legend.
+        
         plot() plots the spectrum of all standard stars in the program.
         plot(['vega'],['bd17']) returns only the spectrum for those two
         stars.
         plot('vega') returns the spectrum for only that star.
-        The y array for each plot is presented as a logarithm, while the 
-        x array is linear if plot(). This is an optional perameter and can be changed by setting xlog and ylog to true or false when calling the function.
-        x limits are set between 3,000 and 10,000 and y limits are calculated based on those values. The x limits are optional and can be altered when calling the function.
-        The flux values are automatically set to counts, but they can be changed to ergs by setting countsToErgs=True when calling the function.
-        The flux is automatically normalized, but one can choose to not normalize the flux by setting normalizeFlux=False when calling the function.
+        
+        The y array for each plot is presented as a logarithm, while the
+        x array is linear if plot(). This is an optional perameter and can
+        be changed by setting xlog and ylog to true or false when calling
+        the function.
+        
+        x limits are set between 3,000 and 10,000 and y limits are 
+        calculated based on those values. The x limits are optional and 
+        can be altered when calling the function.
+        
+        The flux values are automatically set to counts, but they can be 
+        changed to ergs by setting countsToErgs=True when calling the 
+        function.
+        
+        The flux is automatically normalized, but one can choose to not 
+        normalize the flux by setting normalizeFlux=False when calling 
+        the function.
+        
         Plots are saved as plotname.png
         """
         if (name == "all"):
@@ -255,7 +274,9 @@ class MKIDStd:
 
     def plotfilters(self):
         """
-        Plots all filters.  This includes both the UBVRI and the SDSS filters. Note that the array is reversed, compared to that used by the plot() function.
+        Plots all filters.  This includes both the UBVRI and the SDSS 
+        filters. Note that the array is reversed, compared to that used 
+        by the plot() function.
         The plot made by the filters is saved as filters.png
         """
         plt.clf()
@@ -270,8 +291,7 @@ class MKIDStd:
 
     def getFluxAtReferenceWavelength(self, a):
         """
-        returns the flux value corresponding with the reference
-        wavelength (6500).
+        returns the flux value at self.referenceWavelength
         """
         x = a[:,0]
         y = a[:,1]
@@ -285,7 +305,8 @@ class MKIDStd:
 
     def ShowUnits(self):
         """
-        Returns flux units for the spectra of objects.
+        Returns flux units from the original data files for the spectra 
+        of all objects.
         """
         for name in self.objects.keys():
             fluxUnit = self.objects[name]['fluxUnit']
@@ -293,7 +314,8 @@ class MKIDStd:
 
     def loadSdssSpecFits(self, fullFileName):
         """
-        Allows spectral data from  a fits file to be read into the program
+        Allows spectral data from a SDSS fits file to be read into the 
+        program
         """
         f = pyfits.open(fullFileName)
         coeff0 = f[0].header['COEFF0']
@@ -308,8 +330,8 @@ class MKIDStd:
 
     def report(self):
         """
-        Creates a text document that reports the units, citation,magnitude, and
-        description of each object.
+        Creates a text document called Report.log that reports the units,
+        citation, magnitude, and description of each object.
         """
         old_stdout = sys.stdout
         log_file = open("Report.log","w")
