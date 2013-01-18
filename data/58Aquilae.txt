@@ -1,6 +1,6 @@
 dataFile = 58Aquilae.dat
 citation = ftp://ftp.eso.org/pub/stecf/standards/ctiostan/
 wavlengthUnit = angstrom
-fluxUnit = mag/sec/angstrom/cm^2?
+fluxUnit = mag/sec/angstrom/cm^2
 description = V=5.62, B-V=+0.10, Spectral type: A0III
 window_len = 1
