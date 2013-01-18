@@ -102,6 +102,12 @@ class MKIDStd:
         len = int(self.objects[name]['window_len'][0])
         if len > 1:
             a[:,1] = smooth.smooth(a[:,1], window_len=len)[len/2:-(len/2)]
+        try:
+            fluxUnit = self.objects[name]['fluxUnit'][0]
+            scale = float(fluxUnit.split()[0])
+            a[:,1] *= scale
+        except ValueError:
+            print "error"
         ergs = string.count(self.objects[name]['fluxUnit'][0],"ergs")
         if ergs:
             a[:,1] *= (a[:,0] * self.k)
@@ -109,6 +115,8 @@ class MKIDStd:
         if mag:
             a[:,1] = (10**(-2.406/2.5))*(10**(-0.4*a[:,1]))/(a[:,0]**2) * (a[:,0] * self.k)
         return a
+    
+    
 
     def normalizeFlux(self,a):
         referenceFlux = self.getFluxAtReferenceWavelength(a)
@@ -132,7 +140,7 @@ class MKIDStd:
         sum /= sumd
         return sum
 
-    def getVegaMag(self, aFlux, aFilter):
+    def _getVegaMag(self, aFlux, aFilter):
         if self.vegaInCounts == "not loaded yet":
             self.vegaInCounts = self.load("vega")
         sumNumerator = 0.0
@@ -146,6 +154,12 @@ class MKIDStd:
             sumDenominator += vFlux[i]*filter[i]*dw
         mag = -2.5*math.log10(sumNumerator/sumDenominator) + 0.03
         return mag
+
+    def getVegaMag(self,name,Filter):
+        aFlux = self.load(name)
+        aFilter = self.filters[Filter]
+        a = self._getVegaMag(aFlux, aFilter)
+        return a
 
     def plot(self,name="all",xlog=False,ylog=True,xlim=[3000,10000],normalizeFlux=True,countsToErgs=False):
         """
