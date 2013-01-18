@@ -2,5 +2,5 @@ dataFile = hd93521.dat
 citation = ftp://ftp.eso.org/pub/stecf/standards/hststan/
 wavlengthUnit = Angstrom
 fluxUnit = ergs/sec/angstrom/cm^2?
-description = type 09Vp V=7.03
+description = type 09Vp V=7.03 B-V=-0.27
 window_len = 1
