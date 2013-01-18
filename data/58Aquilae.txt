@@ -1,6 +1,10 @@
-dataFile = 58Aquilae.dat
-citation = ftp://ftp.eso.org/pub/stecf/standards/ctiostan/
+dataFile = fhr7596.dat
+citation = ftp://ftp.eso.org/pub/stecf/standards/ctiostan/fhr7596.dat
 wavlengthUnit = angstrom
-fluxUnit = mag/sec/angstrom/cm^2?
+<<<<<<< HEAD
+fluxUnit = mag/sec/angstrom/cm^2
+=======
+fluxUnit = AB Mag
+>>>>>>> fixed 58 Aquilae
 description = V=5.62, B-V=+0.10, Spectral type: A0III
 window_len = 1
