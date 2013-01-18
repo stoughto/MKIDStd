@@ -37,8 +37,8 @@ class MKIDStd:
             self.objects[name] = dictionary
         self.balmerwavelengths = [6563,4861,4341,4102,3970,3889,3835,3646]
         self.lymanwavelengths = [1216,1026,973,950,938,931,926,923,921,919]
-        self._loadFilterFile()
-        self._loadfilters()
+        self._loadUBVRIFilters()
+        self._loadSDSSFilters()
         self.k = (1*10**-10/1*10**7)/h/c
         # h is in Joules/sec and c is in meters/sec. 
         # This k value is used in conversions between counts and ergs
